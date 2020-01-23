@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "start-dev": "nodemon app_01_sessions.js"
+    "start-dev": "nodemon app_02_sessions_mongo.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,8 @@
   "homepage": "https://github.com/JohPak/VEOH-NodeExpress#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-session": "^1.17.0"
+    "express-session": "^1.17.0",
+    "mongoose": "^5.8.9"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
