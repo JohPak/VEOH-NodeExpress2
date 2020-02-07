@@ -18,10 +18,10 @@ const user_schema = new Schema({
     type: String,
     required: true
   },
-  notes: [
+  ostokset: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "note",
+      ref: "ostos",
       req: true
     }
   ]
@@ -75,6 +75,9 @@ app.get("/", is_logged_handler, (req, res, next) => {
   const user = req.user;
   res.write(`
     <html>
+    <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
     <body>
         Logged in as user: ${user.name}
         <form action="/logout" method="POST">

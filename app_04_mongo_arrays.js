@@ -65,40 +65,62 @@ app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
   }
-  user_model.findById(req.session.user._id).then(user => {
-    req.user = user;
-    next();
-  });
+  user_model
+    .findById(req.session.user._id)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => {
+      console.log(err);
+      res.redirect("login");
+    });
 });
 
 app.get("/", is_logged_handler, (req, res, next) => {
   const user = req.user;
-  res.write(`
-    <html>
-    <body>
-        Logged in as user: ${user.name}
-        <form action="/logout" method="POST">
-            <button type="submit">Log out</button>
-        </form>
-        <form action="/add-note" method="POST">
-            <input type="text" name="note">
-            <button type="submit">Add note</button>
-        </form>
-        
+  user
+    .populate("notes")
+    .execPopulate()
+    .then(() => {
+      console.log("user:", user);
+      res.write(`
+        <html>
+        <body>
+            Logged in as user: ${user.name}
+            <form action="/logout" method="POST">
+                <button type="submit">Log out</button>
+            </form>`);
+      user.notes.forEach(note => {
+        res.write(note.text);
+      });
 
-    </html>
-    </body>
-    `);
-  res.end();
+      res.write(`
+            <form action="/add-note" method="POST">
+                <input type="text" name="note">
+                <button type="submit">Add note</button>
+            </form>
+            
+    
+        </html>
+        </body>
+        `);
+      res.end();
+    });
 });
 
 app.post("/add-note", (req, res, next) => {
+  const user = req.user;
+
   let new_note = note_model({
     text: req.body.note
   });
   new_note.save().then(() => {
     console.log("note saved");
-    return res.redirect("/");
+    user.notes.push(new_note);
+    user.save().then(() => {
+      return res.redirect("/");
+    });
   });
 });
 
@@ -114,11 +136,11 @@ app.get("/login", (req, res, next) => {
     <body>
         <form action="/login" method="POST">
             <input type="text" name="user_name">
-            <button type="submit">Kirjaudu sisään</button>
+            <button type="submit">Log in</button>
         </form>
         <form action="/register" method="POST">
             <input type="text" name="user_name">
-            <button type="submit">Rekisteröidy</button>
+            <button type="submit">Register</button>
         </form>
     </body>
     <html>
@@ -156,7 +178,8 @@ app.post("/register", (req, res, next) => {
       }
 
       let new_user = new user_model({
-        name: user_name
+        name: user_name,
+        notes: []
       });
 
       new_user.save().then(() => {
@@ -174,7 +197,6 @@ app.use((req, res, next) => {
 
 //Shutdown server CTRL + C in terminal
 
-//tämä kopsittiin mongodb-sivulta ja vaihdetiin riville tietokantaan kytketyn käyttäjän salasana
 const mongoose_url =
   "mongodb+srv://db-user:qkv3ezg72PXk2tW@cluster0-drnpu.mongodb.net/test?retryWrites=true&w=majority";
 
