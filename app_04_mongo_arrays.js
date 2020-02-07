@@ -1,5 +1,9 @@
 // osoite: http://localhost:8080/login
 
+
+
+
+
 const express = require("express");
 const PORT = process.env.PORT || 8080;
 const body_parser = require("body-parser");
@@ -63,6 +67,9 @@ const is_logged_handler = (req, res, next) => {
   next();
 };
 
+//tyylitiedoston liittäminen
+app.use('/css', express.static('css'));
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -88,6 +95,9 @@ app.get("/", is_logged_handler, (req, res, next) => {
       console.log("user:", user);
       res.write(`
         <html>
+        <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        </head>
         <body>
             Logged in as user: ${user.name}
             <form action="/logout" method="POST">
@@ -135,6 +145,9 @@ app.get("/login", (req, res, next) => {
   console.log("user: ", req.session.user);
   res.write(`
     <html>
+    <head>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
     <body>
         <form action="/login" method="POST">
             <input type="text" name="user_name">
