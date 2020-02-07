@@ -1,3 +1,5 @@
+// osoite: http://localhost:8080/login
+
 const express = require("express");
 const PORT = process.env.PORT || 8080;
 const body_parser = require("body-parser");
