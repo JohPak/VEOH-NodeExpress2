@@ -15,7 +15,7 @@ const Schema = mongoose.Schema;
 // luodaan kauppalistoille oma skeema
 // ja sen alle notesit
 const shoppinglists_schema = new Schema({
-  text: {
+  name: {
     type: String,
     required: true
   },
@@ -30,24 +30,36 @@ const shoppinglists_schema = new Schema({
 // kauppalistoille oma model
 const shoppinglists_model = new mongoose.model("shoppinglists", shoppinglists_schema);
 
-
+// ostoslistan sisältö
 const note_schema = new Schema({
   text: {
-    type: String,
+    // type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "note",
     required: true
   }
 });
 const note_model = new mongoose.model("note", note_schema);
 
+// käyttäjätaulu
 const user_schema = new Schema({
   name: {
     type: String,
     required: true
   },
-  notes: [
+  // notes: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "note",
+  //     req: true
+  //   }
+  // ]
+
+  //käyttäjällä on shoppinglists-taulukko
+  shoppinglists: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "note",
+      ref: "shoppinglists",
       req: true
     }
   ]
@@ -110,6 +122,7 @@ app.get("/", is_logged_handler, (req, res, next) => {
   const user = req.user;
   user
     .populate("notes")
+    .populate("shoppinglists")
     .execPopulate()
     .then(() => {
       console.log("user:", user);
@@ -121,7 +134,7 @@ app.get("/", is_logged_handler, (req, res, next) => {
         </head>
         <body>
             <div class="div_tervetuloa">
-              Tervetuloa, ${user.name}
+              Tervetuloa, <a href="/user-info">${user.name}</a>
             </div>
             <div class="ylapalkki">
             <div class="div_logout"><form action="/logout" method="POST">
@@ -130,26 +143,87 @@ app.get("/", is_logged_handler, (req, res, next) => {
             </div> 
 
             <h2>Kauppalistat</h2>
-            <div class="listaus">sssdd</div>
-
-            <h2>Listan nimi</h2>
+            <div class="kauppalistat">
             `);
-      user.notes.forEach(note => {
-        res.write('<div class="noteline">'+ note.text +'</div>');
-      });
+            user.shoppinglists.forEach(shoppinglists => {
+              res.write('<div class="noteline">'+ shoppinglists.name +'</div>');
+            });
+      
+            res.write(`
+            </div>
 
+            `);
+
+      // shoppinglists.notes.forEach(note => {
+      //   res.write('<div class="noteline">'+ note.text + shoppinglists.name +'</div>');
+      // });
+
+//LAITA TÄMÄ OMALLE SIVULLE
+{/* <form action="/add-note" method="POST">
+<input type="text" name="note">
+<button type="submit">Lisää listaan</button>
+</form> */}
       res.write(`
-            <form action="/add-note" method="POST">
-                <input type="text" name="note">
-                <button type="submit">Lisää listaan</button>
+            <form action="/add-shoppinglist" method="POST">
+                <input type="text" name="shoppinglist">
+                <button type="submit">Lisää uusi ostoslista</button>
             </form>
             
-    
+            </body>
+
         </html>
-        </body>
         `);
       res.end();
     });
+});
+
+// näytetään käyttäjän tietosivu
+app.get("/user-info", (req, res, next) => {
+  const user = req.user;
+  user
+    .populate("shoppinglists")
+    .execPopulate()
+    .then(() => {
+  res.write(`
+        <html>
+        <head>
+        <link rel="stylesheet" type="text/css" href="css/style2.css">
+        <meta charset="UTF-8">
+        </head>
+        <body>
+            <div class="div_tervetuloa">
+              <a href="/">&lt;&lt; Palaa takaisin</a>
+            </div>
+            <div class="ylapalkki">
+            <div class="div_logout"><form action="/logout" method="POST">
+            <button class="logoutbtn" type="submit">Kirjaudu ulos</button>
+            </form></div>
+            </div> 
+
+            <div>
+            <h2>Käyttäjän tiedot</h2>
+            </div>
+            `);
+            let count = 0;
+            user.shoppinglists.forEach(shoppinglists => {
+              count++;
+            });
+            res.write('<div class="noteline">Sinulla on '+ count + ' ostoslistaa</div>');
+
+            let count2 = 0;
+            shoppinglists.notes.forEach(notes => {
+              count2++;
+            });
+            res.write('<div class="noteline">Olet lisännyt yhteensä '+ count2 + ' tuotetta</div>');
+
+            res.write(`
+    
+        </body>
+        </html>
+
+        `);
+  res.end();
+});
 });
 
 app.post("/add-note", (req, res, next) => {
@@ -161,6 +235,22 @@ app.post("/add-note", (req, res, next) => {
   new_note.save().then(() => {
     console.log("note saved");
     user.notes.push(new_note);
+    user.save().then(() => {
+      return res.redirect("/");
+    });
+  });
+});
+
+//lisätään uusi kauppalista
+app.post("/add-shoppinglist", (req, res, next) => {
+  const user = req.user;
+
+  let new_shoppinglist = shoppinglists_model({
+    name: req.body.shoppinglist
+  });
+  new_shoppinglist.save().then(() => {
+    console.log("new shoppinglist saved");
+    user.shoppinglists.push(new_shoppinglist);
     user.save().then(() => {
       return res.redirect("/");
     });

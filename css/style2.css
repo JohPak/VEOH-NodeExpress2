@@ -25,17 +25,20 @@ button:hover {
     transition: all 0.2s ease 0s;
 }
 .ylapalkki {
-  background-color:#0000001c;
+  background-color:#00000075;
   display: block;
   width: 100%;
 }
 
 .div_tervetuloa {
-  font-size: 1.2em;
-  line-height: 1.5em;
+  font-size: 0.8em;
+  line-height: 2.4em;
   display: inline;
   float:left;
   padding-left: 10px;
+  color: #ffffff;
+  text-transform: uppercase;
+
 }
 .div_logout {
   display: inline;
@@ -46,12 +49,12 @@ text-align: right;
   height: 30px;
 }
 
-.listaus {
-  background-color:#ffffff49;
+.kauppalistat {
+  /* background-color:#ffffff49;
   margin-top: 5px;
   margin-left: 10px;
   margin-right: 10px;
-  padding:5px;
+  padding:5px; */
 }
 p {
   margin:10px;
@@ -75,4 +78,8 @@ input {
  body {
    width: 100%;
  }
+}
+
+a {
+  color: inherit;
 }
