@@ -1,5 +1,5 @@
 // osoite: http://localhost:8080/login
-
+// https://expressjs.com/en/starter/static-files.html
 
 
 
@@ -96,21 +96,32 @@ app.get("/", is_logged_handler, (req, res, next) => {
       res.write(`
         <html>
         <head>
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/style2.css">
+        <meta charset="UTF-8">
         </head>
         <body>
-            Logged in as user: ${user.name}
-            <form action="/logout" method="POST">
-                <button type="submit">Log out</button>
-            </form>`);
+            <div class="div_tervetuloa">
+              Tervetuloa, ${user.name}
+            </div>
+            <div class="ylapalkki">
+            <div class="div_logout"><form action="/logout" method="POST">
+            <button class="logoutbtn" type="submit">Kirjaudu ulos</button>
+            </form></div>
+            </div> 
+
+            <h2>Kauppalistat</h2>
+            <div class="listaus">sssdd</div>
+
+            <h2>Listan nimi</h2>
+            `);
       user.notes.forEach(note => {
-        res.write(note.text);
+        res.write('<div class="noteline">'+ note.text +'</div>');
       });
 
       res.write(`
             <form action="/add-note" method="POST">
                 <input type="text" name="note">
-                <button type="submit">Add note</button>
+                <button type="submit">Lisää listaan</button>
             </form>
             
     
@@ -147,16 +158,29 @@ app.get("/login", (req, res, next) => {
     <html>
     <head>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta charset="UTF-8">
     </head>
     <body>
+
+    <div class="loota">
+      <h1>Kauppalista</h1>
         <form action="/login" method="POST">
-            <input type="text" name="user_name">
-            <button type="submit">Log in</button>
+            <div class="rivi">
+              <input type="text" name="user_name" autofocus>
+            </div>
+            <div class="rivi">
+              <button type="submit">Kirjaudu sisään</button>
+            </div>
         </form>
         <form action="/register" method="POST">
-            <input type="text" name="user_name">
-            <button type="submit">Register</button>
+        <div class="rivi">
+        <input type="text" name="user_name">
+            </div>
+            <div class="rivi">
+              <button type="submit">Rekisteröidy</button>
+            </div>
         </form>
+    </div>
     </body>
     <html>
     `);

@@ -1,3 +1,40 @@
 body {
   background-color: lightblue;
 }
+.loota {
+  background-color:rgba(256, 256, 256, 0.5);
+  padding: 40px;
+  width: 50%;
+  margin: auto;
+  margin-top: 20%;
+}
+h1 {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #3d3a3a;
+}
+
+input, button {
+  width: 100%;
+  height:100%;
+
+}
+input {
+  text-align: center;
+}
+button {
+  color: #ffffff;
+  text-transform: uppercase;
+    text-decoration: none;
+    background: #494949;
+    border: 2px solid #494949;
+    transition: all 0.2s ease 0s;
+}
+button:hover {
+    background: #fcca67;
+    border-color: #fcca67;
+    transition: all 0.2s ease 0s;
+}
+.rivi {
+  height: 40px;
+  margin-top: 10px;
+}

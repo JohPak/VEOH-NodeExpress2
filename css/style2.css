@@ -1,0 +1,78 @@
+body {
+  background-color: lightblue;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #3d3a3a;
+  margin: 0;
+  width: 600px;
+}
+h2 {
+  font-size: 1.5em;
+  margin-left: 10px;
+}
+
+button {
+  color: #ffffff;
+  text-transform: uppercase;
+    text-decoration: none;
+    background: #494949;
+    border: 2px solid #494949;
+    transition: all 0.2s ease 0s;
+    height: 30px;
+}
+button:hover {
+    background: #fcca67;
+    border-color: #fcca67;
+    transition: all 0.2s ease 0s;
+}
+.ylapalkki {
+  background-color:#0000001c;
+  display: block;
+  width: 100%;
+}
+
+.div_tervetuloa {
+  font-size: 1.2em;
+  line-height: 1.5em;
+  display: inline;
+  float:left;
+  padding-left: 10px;
+}
+.div_logout {
+  display: inline;
+text-align: right;
+}
+.logoutbtn {
+  display: inline;
+  height: 30px;
+}
+
+.listaus {
+  background-color:#ffffff49;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding:5px;
+}
+p {
+  margin:10px;
+}
+input {
+  margin:10px;
+  height: 30px;
+
+
+}
+.noteline {
+  background-color:#ffffff49;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding:5px;
+}
+
+/* kun ikkuna on <=600px, niin: */
+@media only screen and (max-width: 600px) {
+ body {
+   width: 100%;
+ }
+}
